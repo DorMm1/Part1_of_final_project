@@ -15,7 +15,7 @@ public class PostgreSQLConnection {
             Class.forName("org.postgresql.Driver");
             connection = DriverManager.getConnection(
                     "jdbc:postgresql://localhost:5432/weFlyDB",
-                    "postgres", "14522563"
+                    "postgres", "********"
             );
             System.out.println("You have connected to the DB!!");
         } catch (Exception e) {
