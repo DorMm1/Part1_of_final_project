@@ -1,0 +1,84 @@
+CREATE TABLE public.user_roles
+(
+    id serial,
+    role_name text NOT NULL UNIQUE,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE public.users
+(
+    id bigserial,
+    username text NOT NULL UNIQUE,
+	userpassword text NOT NULL,
+	email text UNIQUE,
+	user_role integer,
+	FOREIGN KEY(user_role) REFERENCES user_roles(id),
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE public.adminstrators
+(
+    id serial,
+    first_name text,
+	last_name text,
+	user_id bigint,
+	FOREIGN KEY(user_id) REFERENCES users(id),
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE public.customers
+(
+    id bigserial,
+    first_name text,
+	last_name text,
+	address text,
+	phone_no text UNIQUE,
+	credit_card_no text UNIQUE,
+	user_id bigint UNIQUE,
+	FOREIGN KEY(user_id) REFERENCES users(id),
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE public.countries
+(
+    id serial,
+    country_name text UNIQUE,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE public.airline_companies
+(
+    id bigserial,
+    company_name text UNIQUE,
+	country_id integer,
+	user_id bigint UNIQUE,
+	FOREIGN KEY(user_id) REFERENCES users(id),
+	FOREIGN KEY(country_id) REFERENCES countries(id),
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE public.flights
+(
+    id bigserial,
+    airline_company_id bigint,
+	origin_country_id integer,
+	destination_country_id integer,
+	departure_time timestamp,
+	landing_time timestamp,
+	remaining_tickets integer,
+	FOREIGN KEY(airline_company_id) REFERENCES airline_companies(id),
+	FOREIGN KEY(origin_country_id) REFERENCES countries(id),
+	FOREIGN KEY(destination_country_id) REFERENCES countries(id),
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE public.tickets
+(
+    id bigserial,
+    flight_id bigint,
+	customer_id bigint,
+	FOREIGN KEY(flight_id) REFERENCES flights(id),
+	FOREIGN KEY(customer_id) REFERENCES customers(id),
+	UNIQUE(flight_id,customer_id),
+    PRIMARY KEY (id)
+);
